@@ -24,7 +24,7 @@ import net.airlineSystem.my_springApp.service.UserService;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:4000")
 public class MainController {
 
 	@Autowired
