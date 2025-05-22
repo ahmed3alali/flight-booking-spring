@@ -25,7 +25,7 @@ import net.airlineSystem.my_springApp.service.UserService;
 import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:4000")
 public class MainController {
 
     @Autowired

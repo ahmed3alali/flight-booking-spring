@@ -1,85 +1,70 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-export default function FlightsAdmin() {
-  
-  const [flights, setFlights] = useState<any[]>([]);
-  const [error, setError] = useState("");
+const FlightsAdmin = () => {
+  const [flights, setFlights] = useState([]);
+  const navigate = useNavigate();
+
   useEffect(() => {
-    
-    const fetchFlights = async () => {
-      try {
-        setError("");
-        const res = await axios.get(
-          `http://localhost:4000/flight`
-        );
-        console.log("Route flights API response:", res.data);
-        setFlights(Array.isArray(res.data) ? res.data : []);
-        if (!Array.isArray(res.data) || res.data.length === 0) {
-          setError("No flights found.");
-
-
-
-
-
-
-
-        }
-      } catch (err: any) {
-        setError(err.response?.data?.message || "Failed to fetch flights");
-        setFlights([]);
-      }
-    };
-
-    fetchFlights();
+    axios.get("http://localhost:4000/flight")
+      .then((res) => setFlights(res.data))
+      .catch((err) => console.error("Failed to fetch flights", err));
   }, []);
 
-  const deleteFlight = async (id) => {
-    const confirm = window.confirm("Are you sure you want to delete this flight?");
-    if (!confirm) return;
+  const handleDelete = async (pnr: string) => {
+    console.log("Trying to delete flight with PNR:", pnr); // ✅ add this
+  
+    if (!pnr) return alert("Invalid PNR value!");
+  
+    if (!window.confirm(`Delete flight with PNR: ${pnr}?`)) return;
     try {
-      await axios.delete(`/flights/${id}`);
-      setFlights(flights.filter(f => f._id !== id));
+      await axios.delete(`http://localhost:4000/flight/${pnr}`);
+      setFlights((prev) => prev.filter((f) => f.flightNo !== pnr));
+      alert("Flight deleted!");
     } catch (err) {
-      console.error("Delete failed:", err);
+      alert("Failed to delete flight");
+      console.error(err);
     }
   };
-
+  
   return (
-    <div className="min-h-screen p-10 bg-white">
-      <h1 className="text-3xl font-bold mb-6">✈️ Flights Management</h1>
-
-      <Link to="/admin/flights/new" className="bg-blue-600 text-white px-4 py-2 rounded-md mb-4 inline-block hover:bg-blue-700">
-        ➕ Add New Flight
-      </Link>
-
-      <table className="w-full border mt-4">
-        <thead className="bg-gray-200">
-          <tr>
-            <th className="p-2">Airline</th>
-            <th>From → To</th>
-            <th>Date</th>
-            <th>Price</th>
-            <th>Seats</th>
-            <th>Actions</th>
+    <div className="p-6">
+      <h2 className="text-2xl font-bold mb-4">Manage Flights</h2>
+      <table className="min-w-full bg-white border">
+        <thead>
+          <tr className="bg-gray-200">
+            <th className="p-2 border">PNR</th>
+            <th className="p-2 border">From</th>
+            <th className="p-2 border">To</th>
+            <th className="p-2 border">Depart</th>
+            <th className="p-2 border">Airline</th>
+            <th className="p-2 border">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {flights.map(flight => (
-            <tr key={flight._id} className="text-center border-t">
-              <td className="p-2">{flight.airline}</td>
-              <td>{flight.from} → {flight.to}</td>
-              <td>{new Date(flight.date).toLocaleString()}</td>
-              <td>${flight.price}</td>
-              <td>{flight.seats}</td>
-              <td className="space-x-2">
-                <Link to={`/admin/flights/edit/${flight._id}`} className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600">
-                  ✏️ Edit
-                </Link>
-                <button onClick={() => deleteFlight(flight._id)} className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">
-                  ❌ Delete
-                </button>
+          {flights.map((flight) => (
+            <tr key={flight.flightId}>
+              <td className="p-2 border">{flight.flightNo}</td>
+              <td className="p-2 border">{flight.origin}</td>
+              <td className="p-2 border">{flight.destination}</td>
+              <td className="p-2 border">{flight.departTime}</td>
+              <td className="p-2 border">{flight.airline}</td>
+              <td className="p-2 border space-x-2">
+             
+              <button
+      onClick={() => navigate(`/admin/flights/edit/${flight.flightNo}`)}
+      className="bg-blue-500 text-white px-2 py-1 rounded"
+    >
+      Edit
+    </button>
+
+      <button
+        onClick={() => handleDelete(flight.flightNo)}
+        className="bg-red-500 text-white px-2 py-1 rounded"
+      >
+        Delete
+      </button>
               </td>
             </tr>
           ))}
@@ -87,4 +72,6 @@ export default function FlightsAdmin() {
       </table>
     </div>
   );
-}
+};
+
+export default FlightsAdmin;
