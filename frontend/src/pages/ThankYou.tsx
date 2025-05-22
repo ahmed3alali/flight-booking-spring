@@ -27,7 +27,7 @@ export default function ThankYouPage() {
 
         <div className="border-t pt-4 space-y-2 text-sm text-gray-700">
           <p><strong>Airline:</strong> {flight.airline}</p>
-          <p><strong>Route:</strong> {flight.depart} → {flight.arrive}</p>
+          <p><strong>Route:</strong> {flight.origin} → {flight.destination}          </p>
           <p><strong>Passenger:</strong> {passenger.name}</p>
           <p><strong>Passport:</strong> {passenger.passport}</p>
           <p><strong>Contact:</strong> {passenger.email} / {passenger.phone}</p>

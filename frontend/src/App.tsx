@@ -18,6 +18,8 @@ import ThankYouPage from "./pages/ThankYou";
 import FlightsAdmin from "./pages/Admin/FlightsAdmin";
 import AddEditFlight from "./pages/Admin/AddEditFlight";
 import BookingsList from "./pages/Admin/BookingsList";
+import PersonsList from "./pages/Admin/PersonsList";
+import EditPerson from "./pages/Admin/EditPerson";
 
 
 const queryClient = new QueryClient();
@@ -43,8 +45,13 @@ const App = () => (
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/flights" element={<FlightsAdmin />} />
 <Route path="/admin/flights/new" element={<AddEditFlight />} />
-<Route path="/admin/flights/edit/:id" element={<AddEditFlight />} />
+<Route path="/admin/flights/edit/:pnr" element={<AddEditFlight />} />
 <Route path="/admin/bookings" element={<BookingsList />} />
+
+<Route path="/admin/persons" element={<PersonsList />} />
+<Route path="/admin/passengers/edit/:id" element={<EditPerson />} />
+
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
