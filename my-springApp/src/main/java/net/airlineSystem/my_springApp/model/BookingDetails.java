@@ -18,20 +18,19 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Data  
+@Data
 @Table(name = "bookings")
-
 
 // Lombok @Data generates getters, setters, toString, equals, and hashCode automatically
 public class BookingDetails {
 
-     @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingId;
 
-    @ManyToOne
-    @JoinColumn(name = "passenger_id", nullable = false)
-    private PersonDetails passenger;
+@ManyToOne
+@JoinColumn(name = "passenger_id", referencedColumnName = "person_details_id", nullable = false)
+private PersonDetails passenger;
 
     private Long flightId;
 
@@ -66,7 +65,6 @@ public class BookingDetails {
     }
 
     // Getters and setters
-
     public Long getBookingId() {
         return bookingId;
     }
@@ -91,11 +89,11 @@ public class BookingDetails {
         this.flightId = flightId;
     }
 
-    public String getBookingDate() {
+    public String getDepartWeekday() {
         return departWeekday;
     }
 
-    public void setBookingDate(String departWeekday) {
+    public void setDepartWeekday(String departWeekday) {
         this.departWeekday = departWeekday;
     }
 
@@ -115,11 +113,8 @@ public class BookingDetails {
         this.paymentInfo = paymentInfo;
     }
 }
-    // No-arg constructor is created by default or via Lombok @Data
+// No-arg constructor is created by default or via Lombok @Data
 
-    // If you want a constructor with all fields, you can use @AllArgsConstructor from Lombok or define it manually:
-
-  
-
-    // If you don’t want to use Lombok or want explicit toString, equals, hashCode, add them manually here.
+// If you want a constructor with all fields, you can use @AllArgsConstructor from Lombok or define it manually:
+// If you don’t want to use Lombok or want explicit toString, equals, hashCode, add them manually here.
 

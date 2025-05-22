@@ -6,6 +6,7 @@ import net.airlineSystem.my_springApp.model.BookingDetails;
 import net.airlineSystem.my_springApp.model.FlightData;
 import net.airlineSystem.my_springApp.model.PersonDetails;
 import net.airlineSystem.my_springApp.model.UserDetails;
+import net.airlineSystem.my_springApp.repositery.PersonDetailsDao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,122 +20,150 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import net.airlineSystem.my_springApp.service.BookingService;
 import net.airlineSystem.my_springApp.service.FlightService;
+import net.airlineSystem.my_springApp.service.PersonService;
 import net.airlineSystem.my_springApp.service.UserService;
-
-
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:8080")
 public class MainController {
 
-	@Autowired
-	private FlightService flightService;
+    @Autowired
+    private FlightService flightService;
 
-	@Autowired
-	private Airports airports;
+    @Autowired
+    private Airports airports;
 
-	@Autowired
-	private UserService userService;
-	
-	@Autowired
-	private BookingService bookingservice;
-	
-	@GetMapping("/hello")
-	public ResponseEntity<String> getHello() throws Exception{
-		return new ResponseEntity<String>("Hello From Server",HttpStatus.OK);
-	}
+    @Autowired
+    private UserService userService;
 
-	@GetMapping("/flight")
-	public ResponseEntity<List<FlightData>> allFlight() throws Exception {
-		List<FlightData> list = flightService.viewAllFlight();
-		return new ResponseEntity<>(list, HttpStatus.OK);
-	}
+    @Autowired
+    private BookingService bookingservice;
 
-	@GetMapping("/airports/{name}")
-	public ResponseEntity<List<net.airlineSystem.my_springApp.model.Airports>> getAllAirporat(
-			@PathVariable("name") String airportName) throws Exception {
-		return new ResponseEntity<>(airports.findAllAirports(airportName), HttpStatus.OK);
-	}
+    @Autowired
+    private PersonService personService;
 
-	@GetMapping("/flight/{number}")
-	public ResponseEntity<List<FlightData>> findFligtByNumber(@PathVariable("number") String number) throws Exception {
-		return new ResponseEntity<>(flightService.FindByFlightNumber(number), HttpStatus.OK);
-	}
+    @GetMapping("/hello")
+    public ResponseEntity<String> getHello() throws Exception {
+        return new ResponseEntity<String>("Hello From Server", HttpStatus.OK);
+    }
 
-	@GetMapping("/flight/{origin}/{destination}")
-	public ResponseEntity<List<FlightData>> findFlightByOriginDestination(@PathVariable("origin") String origin,
-        @PathVariable("destination") String destination) throws Exception {
-    System.out.println("Searching flights from " + origin + " to " + destination);
-    List<FlightData> flights = flightService.findFlightByOriginToDestination(origin, destination);
-    System.out.println("Found " + flights.size() + " flights");
-    return new ResponseEntity<>(flights, HttpStatus.OK);
-}
-	
+    @GetMapping("/flight")
+    public ResponseEntity<List<FlightData>> allFlight() throws Exception {
+        List<FlightData> list = flightService.viewAllFlight();
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @GetMapping("/airports/{name}")
+    public ResponseEntity<List<net.airlineSystem.my_springApp.model.Airports>> getAllAirporat(
+            @PathVariable("name") String airportName) throws Exception {
+        return new ResponseEntity<>(airports.findAllAirports(airportName), HttpStatus.OK);
+    }
+
+    @GetMapping("/flight/{number}")
+    public ResponseEntity<List<FlightData>> findFligtByNumber(@PathVariable("number") String number) throws Exception {
+        return new ResponseEntity<>(flightService.FindByFlightNumber(number), HttpStatus.OK);
+    }
+
+    @GetMapping("/flight/{origin}/{destination}")
+    public ResponseEntity<List<FlightData>> findFlightByOriginDestination(@PathVariable("origin") String origin,
+            @PathVariable("destination") String destination) throws Exception {
+        System.out.println("Searching flights from " + origin + " to " + destination);
+        List<FlightData> flights = flightService.findFlightByOriginToDestination(origin, destination);
+        System.out.println("Found " + flights.size() + " flights");
+        return new ResponseEntity<>(flights, HttpStatus.OK);
+    }
+
+    @PostMapping("/flight")
+    public ResponseEntity<FlightData> addFlight(@RequestBody FlightData flight) {
+        FlightData saved = flightService.saveFlight(flight);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/flight/{pnr}")
+    public ResponseEntity<FlightData> updateFlightByPNR(@PathVariable("pnr") String pnr, @RequestBody FlightData updatedFlight) {
+        FlightData updated = flightService.updateFlightByPnr(pnr, updatedFlight);
+        return new ResponseEntity<>(updated, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/flight/{pnr}")
+    public ResponseEntity<String> deleteFlightByPnr(@PathVariable("pnr") String pnr) {
+        try {
+            flightService.deleteFlightByPnr(pnr);
+            return new ResponseEntity<>("Flight with PNR " + pnr + " deleted.", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error: " + e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    //show persons
+    @GetMapping("/persons")
+    public ResponseEntity<List<PersonDetails>> getAllPersons() {
+        return new ResponseEntity<>(personService.getAllPersons(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/passenger/{id}")
+    public ResponseEntity<String> deletePassenger(@PathVariable Integer id) {
+        personService.deletePersonById(id);
+        return ResponseEntity.ok("Passenger deleted successfully");
+    }
+
+    @PutMapping("/passenger/{id}")
+    public ResponseEntity<PersonDetails> updatePassenger(@PathVariable Integer id, @RequestBody PersonDetails updatedPerson) {
+        PersonDetails person = personService.updatePerson(id, updatedPerson);
+        return ResponseEntity.ok(person);
+    }
+
 //	??User Things
 // we are using the following routers : /booking (all) ( users is not used right now)
-        
-	@PostMapping("/user")
-	public ResponseEntity<UserDetails> saveOrVeryfyUser(@RequestBody UserDetails userdetails) throws Exception {
+    @PostMapping("/user")
+    public ResponseEntity<UserDetails> saveOrVeryfyUser(@RequestBody UserDetails userdetails) throws Exception {
 
-		return new ResponseEntity<UserDetails>(userService.saveuser(userdetails), HttpStatus.OK);
-	}
+        return new ResponseEntity<UserDetails>(userService.saveuser(userdetails), HttpStatus.OK);
+    }
 
-	@GetMapping("/user")
-	public ResponseEntity<List<UserDetails>> getAllUser() throws Exception {
+    @GetMapping("/user")
+    public ResponseEntity<List<UserDetails>> getAllUser() throws Exception {
 
-		return new ResponseEntity<List<UserDetails>>(userService.getAllUser(), HttpStatus.OK);
-	}
-	@DeleteMapping("/user")
-	public ResponseEntity<String> deleteAllUser() throws Exception{
-		return new ResponseEntity<String>(userService.deleteAllUser(),HttpStatus.OK);
-	}
-	
-	
+        return new ResponseEntity<List<UserDetails>>(userService.getAllUser(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/user")
+    public ResponseEntity<String> deleteAllUser() throws Exception {
+        return new ResponseEntity<String>(userService.deleteAllUser(), HttpStatus.OK);
+    }
+
 //	Booking Test
-	
-	@GetMapping("/booking/{user}")
-	public ResponseEntity<List<BookingDetails>> getAllBooking(@PathVariable("user") String user) throws Exception{
-		return new ResponseEntity<List<BookingDetails>>(bookingservice.getAllBooking(user),HttpStatus.OK);
-	}
-        
-        
-        
-        @GetMapping("/bookings")
-	public ResponseEntity<List<BookingDetails>> allBookings() throws Exception {
-		List<BookingDetails> list = bookingservice.viewAllBookings();
-		return new ResponseEntity<>(list, HttpStatus.OK);
-	}
-        
-        
-	@PostMapping("/booking/{user}")
-public ResponseEntity<BookingDetails> saveBooking(@RequestBody BookingDetails bookingDetails, @PathVariable("user") String user) throws Exception {
+    @GetMapping("/booking/{user}")
+    public ResponseEntity<List<BookingDetails>> getAllBooking(@PathVariable("user") String user) throws Exception {
+        return new ResponseEntity<List<BookingDetails>>(bookingservice.getAllBooking(user), HttpStatus.OK);
+    }
 
+    @GetMapping("/bookings")
+    public ResponseEntity<List<BookingDetails>> allBookings() throws Exception {
+        List<BookingDetails> list = bookingservice.viewAllBookings();
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
 
+    @PostMapping("/booking/{user}")
+    public ResponseEntity<BookingDetails> saveBooking(@RequestBody BookingDetails bookingDetails, @PathVariable("user") String user) throws Exception {
 
-    // Extract passenger, flightId, paymentInfo from bookingDetails object
-            PersonDetails passenger = bookingDetails.getPassenger();
-            
-    Long flightId = bookingDetails.getFlightId();
-    String paymentInfoJson = bookingDetails.getPaymentInfo();
-    String departWeekday = bookingDetails.getDepartWeekday();
-    
+        // Extract passenger, flightId, paymentInfo from bookingDetails object
+        PersonDetails passenger = bookingDetails.getPassenger();
 
-    BookingDetails savedBooking = bookingservice.createBooking(passenger,departWeekday,  flightId, paymentInfoJson);
+        Long flightId = bookingDetails.getFlightId();
+        String paymentInfoJson = bookingDetails.getPaymentInfo();
+        String departWeekday = bookingDetails.getDepartWeekday();
 
+        BookingDetails savedBooking = bookingservice.createBooking(passenger, departWeekday, flightId, paymentInfoJson);
 
-    return new ResponseEntity<>(savedBooking, HttpStatus.CREATED);
+        return new ResponseEntity<>(savedBooking, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/booking")
+    public ResponseEntity<List<BookingDetails>> deleteBooking() throws Exception {
+        List<BookingDetails> deletedBookings = bookingservice.deletAllBooking();
+        return new ResponseEntity<>(deletedBookings, HttpStatus.OK);
+    }
+
 }
-
-	@DeleteMapping("/booking")
-public ResponseEntity<List<BookingDetails>> deleteBooking() throws Exception {
-    List<BookingDetails> deletedBookings = bookingservice.deletAllBooking();
-    return new ResponseEntity<>(deletedBookings, HttpStatus.OK);
-}
-
-	
-}
-
-
-
-
-

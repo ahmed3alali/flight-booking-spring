@@ -11,32 +11,32 @@ import net.airlineSystem.my_springApp.repositery.UserDetailsDao;
 @Service
 public class UserServiceipl implements UserService {
 
-	@Autowired
-	private UserDetailsDao userDao;
+    @Autowired
+    private UserDetailsDao userDao;
 
-	@Override
-	public UserDetails saveuser(UserDetails user) throws Exception {
+    @Override
+    public UserDetails saveuser(UserDetails user) throws Exception {
 
-		UserDetails findedUser = userDao.findByemail(user.getEmail());
+        UserDetails findedUser = userDao.findByemail(user.getEmail());
 
-		if (findedUser != null) {
-			return findedUser;
-		} else {
-			return userDao.save(user);
-		}
+        if (findedUser != null) {
+            return findedUser;
+        } else {
+            return userDao.save(user);
+        }
 
-	}
+    }
 
-	@Override
-	public List<UserDetails> getAllUser() throws Exception {
+    @Override
+    public List<UserDetails> getAllUser() throws Exception {
 
-		return userDao.findAll();
-	}
+        return userDao.findAll();
+    }
 
-	@Override
-	public String deleteAllUser() throws Exception {
-		userDao.deleteAll();
-		return "User Delete ";
-	}
+    @Override
+    public String deleteAllUser() throws Exception {
+        userDao.deleteAll();
+        return "User Delete ";
+    }
 
 }

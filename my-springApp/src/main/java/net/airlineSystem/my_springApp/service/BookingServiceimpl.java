@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import com.razorpay.Order;
 import com.razorpay.RazorpayException;
 import jakarta.transaction.Transactional;
@@ -24,23 +23,23 @@ import net.airlineSystem.my_springApp.repositery.UserDetailsDao;
 @Service
 public class BookingServiceimpl implements BookingService {
 
-	@Autowired
-	private BookingDetailsDao bookingDetails;
+    @Autowired
+    private BookingDetailsDao bookingDetails;
 
-	@Autowired
-	private CustomerAddressDao customerAddressDao;
+    @Autowired
+    private CustomerAddressDao customerAddressDao;
 
-	@Autowired
-	private PersonDetailsDao personDetailsDao;
+    @Autowired
+    private PersonDetailsDao personDetailsDao;
 
-	@Autowired
-	private UserDetailsDao userDao;
+    @Autowired
+    private UserDetailsDao userDao;
 
-	@Autowired
-	private RozerPay rozerPay;
+    @Autowired
+    private RozerPay rozerPay;
 
-  @Transactional
-    public BookingDetails createBooking(PersonDetails passenger,String departWeekday, Long flightId, String paymentInfoJson) {
+    @Transactional
+    public BookingDetails createBooking(PersonDetails passenger, String departWeekday, Long flightId, String paymentInfoJson) {
         PersonDetails savedPassenger = personDetailsDao.save(passenger);
 
         BookingDetails booking = new BookingDetails();
@@ -52,35 +51,32 @@ public class BookingServiceimpl implements BookingService {
 
         return bookingDetails.save(booking);
     }
-	@Override
-	public List<BookingDetails> getAllBooking(String user) throws Exception {
 
-		UserDetails findedUser = userDao.findByemail(user);
-		if (findedUser != null) {
-			return findedUser.getAllBookigs();
-		} else {
-			throw new Exception("User Not Found");
-		}
+    @Override
+    public List<BookingDetails> getAllBooking(String user) throws Exception {
 
-	}
-        
-        
-        	@Override
-	public List<BookingDetails> viewAllBookings() {
-		
-		List<BookingDetails> data=bookingDetails.findAll();
-		
-		return data;
-	}
+        UserDetails findedUser = userDao.findByemail(user);
+        if (findedUser != null) {
+            return findedUser.getAllBookigs();
+        } else {
+            throw new Exception("User Not Found");
+        }
 
+    }
 
-	@Override
-	public List<BookingDetails> deletAllBooking() throws Exception {
-		List<BookingDetails> allBooking = bookingDetails.findAll();
-		bookingDetails.deleteAll();
-		return allBooking;
-	}
+    @Override
+    public List<BookingDetails> viewAllBookings() {
 
+        List<BookingDetails> data = bookingDetails.findAll();
 
+        return data;
+    }
+
+    @Override
+    public List<BookingDetails> deletAllBooking() throws Exception {
+        List<BookingDetails> allBooking = bookingDetails.findAll();
+        bookingDetails.deleteAll();
+        return allBooking;
+    }
 
 }

@@ -10,12 +10,15 @@ import net.airlineSystem.my_springApp.model.FlightData;
 
 @Repository
 public interface FlightDetailsDao extends JpaRepository<FlightData, Integer> {
-	
-	List<FlightData> findByFlightNo(String flightNo);
-	
-	
-	@Query("SELECT f FROM FlightData f WHERE f.origin = :origin AND f.destination = :destination")
-	List<FlightData> findByOriginToDestination(String origin,String destination);
-	
+
+//    List<FlightData> findByFlightNo(String flightNo);
+    List<FlightData> findByFlightNo(String pnr);
+FlightData findFirstByFlightNo(String flightNo);
+
+    @Query("SELECT f FROM FlightData f WHERE f.origin = :origin AND f.destination = :destination")
+    List<FlightData> findByOriginToDestination(String origin, String destination);
+
+
+    void deleteByFlightNo(String pnr);
 
 }
