@@ -10,7 +10,6 @@ export default function ConfirmationPage() {
 
   const { flight, passenger } = location.state || {};
 
-
   const [card, setCard] = useState({
     number: "",
     name: "",
@@ -19,20 +18,38 @@ export default function ConfirmationPage() {
   });
 
   const handleChange = (e) => {
-    setCard((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+
+    if (name === "number" && !/^\d*$/.test(value)) return; // Only digits
+    if (name === "cvv" && !/^\d*$/.test(value)) return; // Only digits
+    if (name === "name" && /[\d]/.test(value)) return; // No digits in name
+    if (name === "expiry" && !/^\d{0,2}\/?\d{0,2}$/.test(value)) return; // MM/YY format as you type
+
+    setCard((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleConfirm = async (e) => {
     e.preventDefault();
     setError("");
+
+    // Final validation before submission
+    const expiryPattern = /^(0[1-9]|1[0-2])\/\d{2}$/;
+    if (!expiryPattern.test(card.expiry)) {
+      setError("Expiry date must be in MM/YY format.");
+      return;
+    }
+
+    if (card.cvv.length !== 3) {
+      setError("CVV must be 3 digits.");
+      return;
+    }
+
     setLoading(true);
 
-    // Prepare booking data payload matching your backend BookingDetails model
     const bookingPayload = {
-      passenger: passenger,
-      departWeekday:flight.departWeekday,
-
-      flightId: flight.flightId, // or flight.flightId depending on your model
+      passenger,
+      departWeekday: flight.departWeekday,
+      flightId: flight.flightId,
       paymentInfo: JSON.stringify({
         cardNumber: card.number,
         cardName: card.name,
@@ -46,11 +63,9 @@ export default function ConfirmationPage() {
         `http://localhost:4000/booking/${encodeURIComponent(passenger.name)}`,
         bookingPayload
       );
-
       setLoading(false);
-      // On success navigate to thank you page with booking response
       navigate("/thankyou", {
-        state: { flight, passenger, booking: response.data },
+        state: { flight, passenger, booking: response.data  },
       });
     } catch (err) {
       setLoading(false);
@@ -59,19 +74,10 @@ export default function ConfirmationPage() {
     }
   };
 
-  useEffect(()=>{
 
 
-console.log(passenger);
-console.log(flight);
-console.log(flight.departWeekday);
-
-
-
-  })
-
-
-  if (!flight || !passenger) return <p className="p-6 text-red-600">Missing data.</p>;
+  if (!flight || !passenger)
+    return <p className="p-6 text-red-600">Missing data.</p>;
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -85,15 +91,19 @@ console.log(flight.departWeekday);
           </p>
           <p className="text-sm text-gray-600">Passenger: {passenger.name}</p>
           <p className="text-sm text-gray-600">Total: ${flight.economyFare}</p>
+          <p className="text-sm text-gray-600">Date : {flight.departDate}</p>
         </div>
 
         <form onSubmit={handleConfirm} className="space-y-4">
+          {error && <p className="text-red-600 text-sm">{error}</p>}
           <input
             name="number"
-            placeholder="Card Number (e.g. 4242 4242 4242 4242)"
+            placeholder="Card Number (e.g. 4242424242424242)"
             value={card.number}
             onChange={handleChange}
             required
+            maxLength={16}
+            inputMode="numeric"
             className="w-full p-2 border rounded"
           />
           <input
@@ -111,6 +121,7 @@ console.log(flight.departWeekday);
               value={card.expiry}
               onChange={handleChange}
               required
+              maxLength={5}
               className="w-full p-2 border rounded"
             />
             <input
@@ -119,11 +130,17 @@ console.log(flight.departWeekday);
               value={card.cvv}
               onChange={handleChange}
               required
+              maxLength={3}
+              inputMode="numeric"
               className="w-full p-2 border rounded"
             />
           </div>
-          <button className="bg-green-600 hover:bg-green-700 text-white w-full py-2 rounded font-semibold">
-            Confirm Payment
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-green-600 hover:bg-green-700 text-white w-full py-2 rounded font-semibold"
+          >
+            {loading ? "Processing..." : "Confirm Payment"}
           </button>
         </form>
       </div>

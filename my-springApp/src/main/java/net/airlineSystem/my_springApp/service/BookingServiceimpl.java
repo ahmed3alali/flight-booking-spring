@@ -52,17 +52,21 @@ public class BookingServiceimpl implements BookingService {
         return bookingDetails.save(booking);
     }
 
-    @Override
-    public List<BookingDetails> getAllBooking(String user) throws Exception {
+@Override
+public List<BookingDetails> getAllBooking(String email) throws Exception {
+    List<BookingDetails> allBookings = bookingDetails.findAll();
 
-        UserDetails findedUser = userDao.findByemail(user);
-        if (findedUser != null) {
-            return findedUser.getAllBookigs();
-        } else {
-            throw new Exception("User Not Found");
-        }
+    List<BookingDetails> filtered = allBookings.stream()
+        .filter(b -> b.getPassenger() != null && email.equalsIgnoreCase(b.getPassenger().getEmail()))
+        .toList();
 
+    if (filtered.isEmpty()) {
+        throw new Exception("No bookings found for this email");
     }
+
+    return filtered;
+}
+
 
     @Override
     public List<BookingDetails> viewAllBookings() {
@@ -78,5 +82,38 @@ public class BookingServiceimpl implements BookingService {
         bookingDetails.deleteAll();
         return allBooking;
     }
+
+    @Override
+    public Optional<BookingDetails> findById(Long id) {
+         return bookingDetails.findById(id);
+    }
+
+   @Override
+@Transactional
+public BookingDetails updateBooking(Long bookingId, Long newFlightId) {
+    BookingDetails booking = bookingDetails.findById(bookingId)
+        .orElseThrow(() -> new RuntimeException("Booking not found with ID: " + bookingId));
+
+    // Update the flightId
+    booking.setFlightId(newFlightId);
+
+    // Save and return updated booking
+    return bookingDetails.save(booking);
+}
+
+
+
+@Override
+public void deleteBookingById(Long bookingId) {
+    bookingDetails.deleteById(bookingId);
+}
+
+    
+
+
+    
+  
+    
+    
 
 }

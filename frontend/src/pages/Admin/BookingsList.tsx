@@ -19,16 +19,19 @@ export default function BookingsList() {
 
       const bookingsWithFlights = await Promise.all(
         bookingsData.map(async (booking) => {
+          const flightId = booking.flightId || booking.flight_id; // ensure compatibility
           try {
-            const flightRes = await axios.get(
-              `http://localhost:4000/flights/${booking.flightId}`
-            );
+            const flightRes = await axios.get(`http://localhost:4000/flights/${flightId}`);
+            console.log(`✈️ Flight data for flightId ${flightId}:`, flightRes.data);
             return { ...booking, flight: flightRes.data };
-          } catch {
+          } catch (error) {
+            console.error(`❌ Failed to fetch flight ${flightId}:`, error.message);
             return { ...booking, flight: null };
           }
         })
       );
+
+      console.log("✅ Enriched bookings with flights:", bookingsWithFlights);
 
       setBookings(bookingsWithFlights);
     } catch (err: any) {
@@ -47,14 +50,34 @@ export default function BookingsList() {
 
     try {
       await axios.delete(`http://localhost:4000/bookings/${bookingId}`);
-      setBookings((prev) => prev.filter((b) => b._id !== bookingId));
+      setBookings((prev) => prev.filter((b) => b.bookingId !== bookingId));
     } catch (err: any) {
       alert(err.response?.data?.message || "Failed to cancel booking");
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+
+
+    <>
+    <header className="bg-white shadow-sm">
+        <div className="container mx-auto py-4 px-4 flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-airline-blue">Admin Dashboard</h1>
+
+
+          <ul>
+
+<a href="/admin">Dashboard Panel </a>
+
+          </ul>
+          <div className="flex items-center space-x-4">
+            <span className="text-sm">Welcome, Admin</span>
+   
+          </div>
+        </div>
+      </header>
+    
+      <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-5xl mx-auto">
         <h1 className="text-4xl font-bold mb-8 text-gray-800">🧾 All Bookings</h1>
 
@@ -66,7 +89,7 @@ export default function BookingsList() {
           <div className="space-y-6">
             {bookings.map((booking, index) => (
               <div
-                key={booking._id}
+                key={booking.bookingId}
                 className="bg-white rounded-xl shadow-md p-6 flex justify-between items-start border border-gray-200"
               >
                 <div>
@@ -77,13 +100,18 @@ export default function BookingsList() {
                     </span>
                   </h2>
                   <p className="text-gray-600 mb-1">
-                    👤 Passenger: {booking.user?.name} ({booking.user?.email})
+                    👤 Passenger: {booking.passenger?.name ?? "Unknown"} ({booking.passenger?.email ?? "?"})
                   </p>
-                  <p className="text-gray-600 mb-1">🕒 Booked on: {new Date(booking.createdAt).toLocaleString()}</p>
+                  <p className="text-gray-600 mb-1">
+                  ✈️ BOOKING PNR : {booking.bookingCode ?? "Unknown"} 
+                  </p>
+                  <p className="text-gray-600 mb-1">
+                    🕒 Flight time: {booking.flight?.departDate  ?? "Uknown"}
+                  </p>
                   <p className="text-gray-600">💳 Status: {booking.paymentStatus}</p>
                 </div>
                 <button
-                  onClick={() => handleCancelBooking(booking._id)}
+                  onClick={() => handleCancelBooking(booking.bookingId)}
                   className="text-red-600 border border-red-600 px-4 py-2 rounded-md hover:bg-red-100 transition"
                 >
                   Cancel ❌
@@ -94,5 +122,8 @@ export default function BookingsList() {
         )}
       </div>
     </div>
+    
+    </>
+  
   );
 }

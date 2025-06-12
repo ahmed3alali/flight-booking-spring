@@ -29,7 +29,26 @@ const FlightsAdmin = () => {
   };
   
   return (
-    <div className="p-6">
+
+    <>
+        <header className="bg-white shadow-sm">
+        <div className="container mx-auto py-4 px-4 flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-airline-blue">Admin Dashboard</h1>
+
+
+          <ul>
+
+<a href="/admin">Dashboard Panel </a>
+
+          </ul>
+          <div className="flex items-center space-x-4">
+            <span className="text-sm">Welcome, Admin</span>
+   
+          </div>
+        </div>
+      </header>
+
+      <div className="p-6">
       <h2 className="text-2xl font-bold mb-4">Manage Flights</h2>
       <table className="min-w-full bg-white border">
         <thead>
@@ -71,6 +90,8 @@ const FlightsAdmin = () => {
         </tbody>
       </table>
     </div>
+    </>
+ 
   );
 };
 

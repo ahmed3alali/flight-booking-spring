@@ -18,7 +18,7 @@ const Home = () => {
               Find Your Perfect Flight
             </h1>
             <p className="text-xl text-white opacity-90 max-w-2xl mx-auto animate-fly-in">
-              Search hundreds of airlines and book your next adventure with SkyJourney
+             A flight booking system developed and designed by Ahmed Alali and Mhd Habeeb 
             </p>
           </div>
           
@@ -30,7 +30,7 @@ const Home = () => {
       <div className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-12 text-airline-blue">
-            Why Book with SkyJourney?
+            Why Book with Travero?
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -67,37 +67,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Popular Destinations */}
-      <div className="py-16">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-12 text-airline-blue">
-            Popular Destinations
-          </h2>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { name: "New York", image: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
-              { name: "Paris", image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
-              { name: "Tokyo", image: "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
-              { name: "Sydney", image: "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
-            ].map((destination, index) => (
-              <div 
-                key={index} 
-                className="relative h-60 rounded-xl overflow-hidden group cursor-pointer"
-              >
-                <img 
-                  src={destination.image} 
-                  alt={destination.name} 
-                  className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
-                  <h3 className="text-white font-semibold text-xl p-4">{destination.name}</h3>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+  
     </div>
   );
 };

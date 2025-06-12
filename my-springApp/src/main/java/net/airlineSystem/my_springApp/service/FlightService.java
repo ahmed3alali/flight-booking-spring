@@ -19,5 +19,11 @@ public interface FlightService {
     FlightData updateFlightByPnr(String pnr, FlightData flight);
 
     public void deleteFlightByPnr(String pnr) throws Exception;
+    
+    
+    
+    public FlightData getFlightById(Integer id);
+
+
 
 }

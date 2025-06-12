@@ -13,19 +13,40 @@ export default function BookingPage() {
   });
 
   const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+
+    if (name === "name") {
+      // Allow letters, spaces, hyphen, apostrophe
+      if (!/^[a-zA-Z\s'-]*$/.test(value)) return;
+    }
+
+    if (name === "passportNo") {
+      // Allow digits only
+      if (!/^\d*$/.test(value)) return;
+    }
+
+
+
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleBooking = (e) => {
     e.preventDefault();
+
+    // Additional final validation example (optional)
+    if (form.name.trim().length < 2) {
+      alert("Name must be at least 2 characters.");
+      return;
+    }
+
+
     console.log("Booking confirmed:", form, flight);
 
-    // Simulate success and navigate to confirmation
     navigate("/confirmation", {
-        state: {
-            flight,
-            passenger: { ...form, flightId: flight.flightId }, // ✅ attach it to passenger
-          },
+      state: {
+        flight,
+        passenger: { ...form, flightId: flight.flightId },
+      },
     });
   };
 
@@ -42,9 +63,11 @@ export default function BookingPage() {
             {flight.origin} → {flight.destination} | ${flight.economyFare}
           </p>
           <p className="text-sm text-gray-600">
-            {flight.departTime} → {flight.arrivalTime} 
+           Departure  {flight.departTime} → Arrival : {flight.arrivalTime}
           </p>
-          
+          <p className="text-sm text-gray-600">
+            Date : {flight.departDate}
+          </p>
         </div>
 
         <form onSubmit={handleBooking} className="space-y-4">
@@ -67,11 +90,13 @@ export default function BookingPage() {
           />
           <input
             name="passportNo"
-            placeholder="Passport Number"
+            placeholder="Passport Number (e.g. A1234567)"
             value={form.passportNo}
             onChange={handleChange}
+            maxLength={9}  // typical passport length
             required
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded uppercase"
+            style={{ textTransform: "uppercase" }}
           />
           <button className="bg-green-600 hover:bg-green-700 text-white w-full py-2 rounded font-semibold">
             Confirm Booking

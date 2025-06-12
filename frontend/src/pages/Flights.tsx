@@ -22,7 +22,7 @@ import { format } from "date-fns";
 const mockFlights = [
   {
     id: 1,
-    airline: "SkyJourney Airways",
+    airline: "Travero Airways",
     flightNumber: "SJ123",
     departureTime: "08:30",
     arrivalTime: "10:45",

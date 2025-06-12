@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -41,6 +42,11 @@ private PersonDetails passenger;
     @Lob
     private String paymentInfo;
 
+    
+    @Column(name = "booking_code", insertable = false, updatable = false)
+private String bookingCode;
+
+    
     // No-arg constructor (required by JPA)
     public BookingDetails() {
     }
@@ -112,6 +118,11 @@ private PersonDetails passenger;
     public void setPaymentInfo(String paymentInfo) {
         this.paymentInfo = paymentInfo;
     }
+    
+    public String getBookingCode() {
+    return bookingCode;
+}
+
 }
 // No-arg constructor is created by default or via Lombok @Data
 

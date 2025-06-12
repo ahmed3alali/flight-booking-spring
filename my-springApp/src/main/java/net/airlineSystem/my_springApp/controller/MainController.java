@@ -1,12 +1,17 @@
 package net.airlineSystem.my_springApp.controller;
 
 import java.util.List;
-import net.airlineSystem.my_springApp.service.Airports;
+import java.util.Map;
+import java.util.Optional;
+import net.airlineSystem.my_springApp.model.Airports;
+
 import net.airlineSystem.my_springApp.model.BookingDetails;
 import net.airlineSystem.my_springApp.model.FlightData;
 import net.airlineSystem.my_springApp.model.PersonDetails;
 import net.airlineSystem.my_springApp.model.UserDetails;
+import net.airlineSystem.my_springApp.repositery.FlightDetailsDao;
 import net.airlineSystem.my_springApp.repositery.PersonDetailsDao;
+import net.airlineSystem.my_springApp.service.AirportService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,7 +37,10 @@ public class MainController {
     private FlightService flightService;
 
     @Autowired
-    private Airports airports;
+    FlightDetailsDao flightdetaisdao;
+    
+   @Autowired
+private AirportService airportService;
 
     @Autowired
     private UserService userService;
@@ -54,11 +62,8 @@ public class MainController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @GetMapping("/airports/{name}")
-    public ResponseEntity<List<net.airlineSystem.my_springApp.model.Airports>> getAllAirporat(
-            @PathVariable("name") String airportName) throws Exception {
-        return new ResponseEntity<>(airports.findAllAirports(airportName), HttpStatus.OK);
-    }
+ 
+    
 
     @GetMapping("/flight/{number}")
     public ResponseEntity<List<FlightData>> findFligtByNumber(@PathVariable("number") String number) throws Exception {
@@ -165,5 +170,68 @@ public class MainController {
         List<BookingDetails> deletedBookings = bookingservice.deletAllBooking();
         return new ResponseEntity<>(deletedBookings, HttpStatus.OK);
     }
+    
+    
+    @DeleteMapping("/bookings/{bookingId}")
+public ResponseEntity<?> deleteBookingById(@PathVariable int bookingId) {
+    try {
+        Optional<BookingDetails> booking = bookingservice.findById((long) bookingId);
+        if (booking.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Booking not found with ID: " + bookingId);
+        }
+
+        bookingservice.deleteBookingById((long) bookingId);
+        return ResponseEntity.ok("Booking deleted successfully.");
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting booking: " + e.getMessage());
+    }
+}
+
+    
+    // GET /api/airports - Get all airports
+@GetMapping("/airports")
+public ResponseEntity<List<Airports>> getAllAirports() {
+    List<Airports> airports = airportService.getAllAirports();
+    return new ResponseEntity<>(airports, HttpStatus.OK);
+}
+
+// GET /api/airports/{name} - Get airport by name
+@GetMapping("/airports/{name}")
+public ResponseEntity<Airports> getAirportByName(@PathVariable String name) {
+    Airports airport = airportService.getAirportByName(name);
+    return new ResponseEntity<>(airport, HttpStatus.OK);
+}
+
+
+@GetMapping("/flights/{id}")
+public ResponseEntity<FlightData> getFlightById(@PathVariable Integer id) {
+    System.out.println("🔍 Looking for flight with ID: " + id);
+    FlightData flight = flightService.getFlightById(id);
+    if (flight != null) {
+        
+        return new ResponseEntity<>(flight, HttpStatus.OK);
+    } else {
+        System.out.println("❌ Flight not found with ID: " + id);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+}
+
+
+@PutMapping("/bookings/{bookingId}")
+public ResponseEntity<?> updateBookingFlight(@PathVariable Long bookingId, @RequestBody Map<String, Object> updates) {
+    try {
+        Long newFlightId = Long.valueOf(updates.get("flightId").toString());
+        BookingDetails updatedBooking = bookingservice.updateBooking(bookingId, newFlightId);
+        return ResponseEntity.ok(updatedBooking);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body("Failed to update booking: " + e.getMessage());
+    }
+}
+
+
+
+
+
 
 }

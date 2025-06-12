@@ -1,5 +1,6 @@
 package net.airlineSystem.my_springApp.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalTime;
 import java.util.Objects;
 
@@ -28,21 +29,67 @@ public class FlightData {
     private String duration;
     private LocalTime arrivalTime;
     private String arrivalWeekday;
-    @Column(name = "pnr_code")
+    @Column(name = "flightNo")
+    @JsonProperty("flightNo")
     private String flightNo;
     private String airlineCode;
     private String airline;
     private String economyFare;
     private String businessFare;
     private String firstFare;
+    private String OrginCode;
+    private String DestCode;
+    private String departDate;
+    
+    
 
     public Integer getFlightId() {
         return flightId;
     }
+    
+    
 
     public void setFlightId(Integer flightId) {
         this.flightId = flightId;
     }
+    
+    
+    
+    
+        public String getDepartDate() {
+        return departDate;
+    }
+    
+    
+
+    public void setDepartDate(String departDate) {
+        this.departDate = departDate;
+    }
+    
+    
+        public String getOrginCode() {
+        return OrginCode;
+    }
+
+    public void setOrginCode(String OrginCode) {
+        this.OrginCode = OrginCode;
+    }
+    
+    
+            public String getDestCode() {
+        return DestCode;
+    }
+
+    public void setDestCode(String DestCode) {
+        this.DestCode = DestCode;
+    }
+    
+    
+    
+    
+    
+    
+    
 
     public String getOrigin() {
         return origin;
@@ -150,7 +197,7 @@ public class FlightData {
 
     public FlightData(Integer flightId, String origin, String destination, LocalTime departTime, String departWeekday,
             String duration, LocalTime arrivalTime, String arrivalWeekday, String flightNo, String airlineCode,
-            String airline, String economyFare, String businessFare, String firstFare) {
+            String airline, String economyFare, String businessFare, String firstFare, String OrginCode,String DestCode, String departDate) {
         super();
         this.flightId = flightId;
         this.origin = origin;
@@ -166,6 +213,9 @@ public class FlightData {
         this.economyFare = economyFare;
         this.businessFare = businessFare;
         this.firstFare = firstFare;
+        this.OrginCode = OrginCode;
+        this.DestCode = DestCode;
+        this.departDate = departDate;
     }
 
     public FlightData() {
@@ -176,30 +226,35 @@ public class FlightData {
     @Override
     public int hashCode() {
         return Objects.hash(airline, airlineCode, arrivalTime, arrivalWeekday, businessFare, departTime, departWeekday,
-                destination, duration, economyFare, firstFare, flightId, flightNo, origin);
+                destination, departDate, duration, economyFare, firstFare, flightId, flightNo, origin,OrginCode,DestCode);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        FlightData other = (FlightData) obj;
-        return Objects.equals(airline, other.airline) && Objects.equals(airlineCode, other.airlineCode)
-                && Objects.equals(arrivalTime, other.arrivalTime)
-                && Objects.equals(arrivalWeekday, other.arrivalWeekday)
-                && Objects.equals(businessFare, other.businessFare) && Objects.equals(departTime, other.departTime)
-                && Objects.equals(departWeekday, other.departWeekday) && Objects.equals(destination, other.destination)
-                && Objects.equals(duration, other.duration) && Objects.equals(economyFare, other.economyFare)
-                && Objects.equals(firstFare, other.firstFare) && Objects.equals(flightId, other.flightId)
-                && Objects.equals(flightNo, other.flightNo) && Objects.equals(origin, other.origin);
-    }
+public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null || getClass() != obj.getClass()) return false;
+
+    FlightData other = (FlightData) obj;
+
+    return Objects.equals(airline, other.airline)
+            && Objects.equals(airlineCode, other.airlineCode)
+            && Objects.equals(arrivalTime, other.arrivalTime)
+            && Objects.equals(arrivalWeekday, other.arrivalWeekday)
+            && Objects.equals(businessFare, other.businessFare)
+            && Objects.equals(departTime, other.departTime)
+            && Objects.equals(departWeekday, other.departWeekday)
+            && Objects.equals(destination, other.destination)
+            && Objects.equals(duration, other.duration)
+            && Objects.equals(economyFare, other.economyFare)
+            && Objects.equals(firstFare, other.firstFare)
+            && Objects.equals(flightId, other.flightId)
+            && Objects.equals(flightNo, other.flightNo)
+            && Objects.equals(origin, other.origin)
+            && Objects.equals(OrginCode, other.OrginCode)   // added line
+            && Objects.equals(DestCode, other.DestCode)  
+            && Objects.equals(departDate, other.departDate); // added line
+}
+
 
     @Override
     public String toString() {
@@ -207,7 +262,9 @@ public class FlightData {
                 + ", departTime=" + departTime + ", departWeekday=" + departWeekday + ", duration=" + duration
                 + ", arrivalTime=" + arrivalTime + ", arrivalWeekday=" + arrivalWeekday + ", flightNo=" + flightNo
                 + ", airlineCode=" + airlineCode + ", airline=" + airline + ", economyFare=" + economyFare
-                + ", businessFare=" + businessFare + ", firstFare=" + firstFare + "]";
+                + ", businessFare=" + businessFare + ", firstFare=" + firstFare + "OrginCode=" + OrginCode + "DestCode="+DestCode+" departDate ="+ departDate +" ]";
+       
+        
     }
 
 }

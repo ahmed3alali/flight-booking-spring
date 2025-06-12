@@ -10,7 +10,7 @@ import Flights from "./pages/Flights";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/Admin/Dashboard";
 import NotFound from "./pages/NotFound";
-import HomeBeta from "./pages/HomeBeta";
+
 import SearchResults from "./pages/SearchResults";
 import BookingPage from "./pages/BookingPage";
 import ConfirmationPage from "./pages/ConfirmationPage";
@@ -20,6 +20,8 @@ import AddEditFlight from "./pages/Admin/AddEditFlight";
 import BookingsList from "./pages/Admin/BookingsList";
 import PersonsList from "./pages/Admin/PersonsList";
 import EditPerson from "./pages/Admin/EditPerson";
+import Protection from "./protection/Protection";
+import ManageBookingPage from "./pages/ManageBookingPage";
 
 
 const queryClient = new QueryClient();
@@ -33,24 +35,26 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="/home" element={<HomeBeta />} />
+
             <Route path="/search/:from/:to/:date" element={<SearchResults />} />
-            
+
             <Route path="/bookingPage/:flightId" element={<BookingPage />} />
             <Route path="/confirmation" element={<ConfirmationPage />} />
             <Route path="/thankyou" element={<ThankYouPage />} />
             <Route path="/flights/:origin/:destination" element={<Flights />} />
             <Route path="login" element={<Login />} />
           </Route>
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin" element={<Protection>
+            <AdminDashboard />
+          </Protection>} />
           <Route path="/admin/flights" element={<FlightsAdmin />} />
-<Route path="/admin/flights/new" element={<AddEditFlight />} />
-<Route path="/admin/flights/edit/:pnr" element={<AddEditFlight />} />
-<Route path="/admin/bookings" element={<BookingsList />} />
+          <Route path="/admin/flights/new" element={<AddEditFlight />} />
+          <Route path="/admin/flights/edit/:pnr" element={<AddEditFlight />} />
+          <Route path="/admin/bookings" element={<BookingsList />} />
 
-<Route path="/admin/persons" element={<PersonsList />} />
-<Route path="/admin/passengers/edit/:id" element={<EditPerson />} />
-
+          <Route path="/admin/persons" element={<PersonsList />} />
+          <Route path="/admin/passengers/edit/:id" element={<EditPerson />} />
+          <Route path="/manage-booking" element={<ManageBookingPage />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

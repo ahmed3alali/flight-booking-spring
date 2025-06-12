@@ -19,7 +19,7 @@ const Navigation: React.FC = () => {
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <Link to="/" className="flex items-center space-x-2">
           <Plane className="h-6 w-6 text-airline-blue" />
-          <span className="text-xl font-bold text-airline-blue">SkyJourney</span>
+          <span className="text-xl font-bold text-airline-blue">Travero</span>
         </Link>
         
         {isMobile ? (
@@ -35,7 +35,7 @@ const Navigation: React.FC = () => {
                 <Link to="/flights">Find Flights</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link to="/bookings">My Bookings</Link>
+                <Link to="/manage-booking">Manage My Booking</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link to="/login">Sign In</Link>
@@ -44,18 +44,16 @@ const Navigation: React.FC = () => {
           </DropdownMenu>
         ) : (
           <div className="flex items-center space-x-6">
-            <Link to="/flights" className="text-gray-600 hover:text-airline-blue transition">
+            <Link to="/" className="text-gray-600 hover:text-airline-blue transition">
               Find Flights
             </Link>
-            <Link to="/bookings" className="text-gray-600 hover:text-airline-blue transition">
-              My Bookings
+            <Link to="/manage-booking" className="text-gray-600 hover:text-airline-blue transition">
+              Manage My Booking
             </Link>
             <Button asChild variant="outline" className="ml-2">
               <Link to="/login">Sign In</Link>
             </Button>
-            <Button asChild>
-              <Link to="/signup">Sign Up</Link>
-            </Button>
+         
           </div>
         )}
       </div>
