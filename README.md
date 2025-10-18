@@ -1,9 +1,7 @@
-<h1 align="center">✈️ Flight Management System (Java Spring Boot)</h1>
+# ✈️ Flight Management System (Java Spring Boot)
 
-<p align="center">
-  <b>A complete airline management system for flights, bookings, airports, and passengers — tested and verified with JUnit.</b><br>
-  Built using <b>Spring Boot</b>, <b>Mockito</b>, and <b>JUnit 5</b> for robust performance and test-driven development.
-</p>
+**A complete airline management system for flights, bookings, airports, and passengers — tested and verified with JUnit.**  
+Built using **Spring Boot**, **Mockito**, and **JUnit 5** for robust performance and test-driven development.
 
 ---
 
@@ -43,16 +41,17 @@ The project follows a **layered architecture** — separating service, data acce
 
 ## 🧩 Project Structure
 
+```
 📦 flight-management-system
 ┣ 📜 AirportServiceImplTest.java
 ┣ 📜 BookingServiceImplTest.java
 ┣ 📜 FlightServiceImplTest.java
 ┣ 📜 PersonServiceImplTest.java
-┣ 📜 ControlFlowDiagrams/
-┣ 📜 DataFlowDiagrams/
+┣ 📂 ControlFlowDiagrams/
+┣ 📂 DataFlowDiagrams/
 ┣ 📜 Documentation.pdf
 ┗ 📜 README.md
-
+```
 
 ---
 
@@ -64,7 +63,7 @@ Mocking isolates the service logic from data persistence layers for precise unit
 ### ✅ Test Coverage Highlights
 
 | Module | Tested Features | Exception Handling | Mocked Repos |
-|---------|-----------------|--------------------|---------------|
+|--------|-----------------|-------------------|--------------|
 | **AirportServiceImpl** | Fetch, search airports | Airport not found | `AirportDao` |
 | **BookingServiceImpl** | CRUD operations, filters | Invalid booking ID/email | `BookingDetailsDao`, `PersonDetailsDao` |
 | **FlightServiceImpl** | Flight CRUD, PNR updates | Missing flight or airport | `FlightDetailsDao`, `AirportDao` |
@@ -95,10 +94,14 @@ public void testGetAirportByName_ReturnsAirport() {
     assertEquals("Dubai", result.getName());
     verify(airportRepo, times(1)).findByName("Dubai");
 }
-
 ```
 
-</details> <details> <summary><b>BookingServiceImplTest.java</b></summary>
+</details>
+
+<details>
+<summary><b>BookingServiceImplTest.java</b></summary>
+
+```java
 @Test
 public void testCreateBooking_SuccessfulCreation() {
     when(personRepo.save(any())).thenReturn(passenger);
@@ -109,49 +112,67 @@ public void testCreateBooking_SuccessfulCreation() {
     assertNotNull(result);
     verify(bookingRepo, times(1)).save(any());
 }
+```
 
+</details>
 
-📊 System Flow Diagrams
-🧭 Control Flow
-Login
-Create a Flight
-Get All Bookings
-Delete Bookings
-🔄 Data Flow
-Add / Update / Delete Flights
-Fetch Bookings
-Manage Airports and Passengers
-🧩 All diagrams are included in the Documentation.pdf file.
+---
 
-| Area         | Key Tests                      |
-| ------------ | ------------------------------ |
+## 📊 System Flow Diagrams
+
+### 🧭 Control Flow
+- Login
+- Create a Flight
+- Get All Bookings
+- Delete Bookings
+
+### 🔄 Data Flow
+- Add / Update / Delete Flights
+- Fetch Bookings
+- Manage Airports and Passengers
+
+🧩 All diagrams are included in the **Documentation.pdf** file.
+
+---
+
+## 🧪 Test Coverage Summary
+
+| Area | Key Tests |
+|------|-----------|
 | **Airports** | Retrieve, search valid/invalid |
 | **Bookings** | Create, update, delete, search |
-| **Flights**  | Add, update by PNR, delete     |
-| **Persons**  | Retrieve, update, delete       |
+| **Flights** | Add, update by PNR, delete |
+| **Persons** | Retrieve, update, delete |
 
+---
 
-| Category          | Stack                              |
-| ----------------- | ---------------------------------- |
-| **Backend**       | Java 17, Spring Boot               |
-| **Database**      | MYSQL |
-| **Testing**       | JUnit 5                            |
-| **Build Tool**    | Maven                              |
-| **Documentation** | Markdown, PDF diagrams             |
+## 🛠️ Technology Stack
 
+| Category | Stack |
+|----------|-------|
+| **Backend** | Java 17, Spring Boot |
+| **Database** | MySQL |
+| **Testing** | JUnit 5, Mockito |
+| **Build Tool** | Maven |
+| **Documentation** | Markdown, PDF diagrams |
 
-🧰 How to Run
-▶️ Run Application
+---
 
-```
+## 🧰 How to Run
+
+### ▶️ Run Application
+
+```bash
 # Build and run
 mvn spring-boot:run
 ```
 
-🧪 Run Tests
-```
+### 🧪 Run Tests
+
+```bash
 mvn test
 ```
 
+---
 
 
